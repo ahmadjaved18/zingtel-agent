@@ -409,7 +409,6 @@ with st.sidebar:
 
     st.markdown('<div class="brand-card">', unsafe_allow_html=True)
     st.markdown('<div class="logo-placeholder">📡</div>', unsafe_allow_html=True)
-    st.markdown("### ZingTel")
     st.caption("Zara AI customer support")
     st.markdown(
         '<div class="status-pill"><span class="status-dot"></span> Ready</div>',
