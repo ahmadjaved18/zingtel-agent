@@ -123,7 +123,6 @@ st.markdown(
             color: #eef4fb;
         }
 
-        [data-testid="stHeader"],
         #MainMenu,
         footer {
             visibility: hidden !important;
@@ -172,6 +171,27 @@ st.markdown(
 
         section[data-testid="stSidebar"] * {
             color: #f5f8fc;
+        }
+
+        section[data-testid="stSidebar"] [data-baseweb="input"] {
+            background: rgba(255, 255, 255, 0.08) !important;
+            border: 1px solid rgba(153, 188, 255, 0.22) !important;
+            border-radius: 14px !important;
+        }
+
+        section[data-testid="stSidebar"] input {
+            color: #ffffff !important;
+            -webkit-text-fill-color: #ffffff !important;
+        }
+
+        section[data-testid="stSidebar"] input::placeholder {
+            color: rgba(245, 248, 252, 0.55) !important;
+        }
+
+        section[data-testid="stSidebar"] label,
+        section[data-testid="stSidebar"] p,
+        section[data-testid="stSidebar"] span {
+            color: #f5f8fc !important;
         }
 
         .brand-card {
