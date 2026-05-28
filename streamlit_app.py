@@ -1,6 +1,8 @@
 import builtins
 import html
 import importlib
+import os
+import sys
 import uuid
 import traceback
 
@@ -14,18 +16,30 @@ st.set_page_config(
     initial_sidebar_state="expanded",
 )
 
+FALLBACK_MESSAGE = (
+    "Zara is not available right now because the API limit has been reached. "
+    "Please try again later."
+)
+
 
 @st.cache_resource(show_spinner=False)
-def load_agent_module():
+def load_agent_module(api_key_override: str | None = None):
     original_input = builtins.input
+    original_api_key = os.environ.get("GEMINI_API_KEY")
+    if api_key_override:
+        os.environ["GEMINI_API_KEY"] = api_key_override
     builtins.input = lambda *args, **kwargs: "quit"
     try:
+        if "app" in sys.modules:
+            return importlib.reload(sys.modules["app"])
         return importlib.import_module("app")
     finally:
         builtins.input = original_input
+        if original_api_key is None:
+            os.environ.pop("GEMINI_API_KEY", None)
+        else:
+            os.environ["GEMINI_API_KEY"] = original_api_key
 
-
-app_module = load_agent_module()
 
 QUICK_PROMPTS = [
     "How do I activate my ZingTel SIM?",
@@ -39,6 +53,31 @@ if "messages" not in st.session_state:
 
 if "thread_id" not in st.session_state:
     st.session_state.thread_id = f"streamlit_{uuid.uuid4().hex}"
+
+if "api_key_override" not in st.session_state:
+    st.session_state.api_key_override = ""
+
+with st.sidebar:
+    st.sidebar.title("ZingTel Support")
+    st.sidebar.markdown(
+        """
+**Zara** can help you with:
+- 📦 Package information
+- 💰 Billing and refunds
+- 🔧 Technical support
+- 📡 Network status
+"""
+    )
+
+    st.sidebar.success("🟢 Zara is online")
+    st.session_state.api_key_override = st.sidebar.text_input(
+        "API key (optional for local testing)",
+        value=st.session_state.api_key_override,
+        type="password",
+        help="Use this only for local testing. For Streamlit Cloud, keep the key in Secrets.",
+    )
+
+app_module = load_agent_module(st.session_state.api_key_override or None)
 
 
 def get_zara_response(user_input: str) -> str:
@@ -67,15 +106,9 @@ def get_zara_response(user_input: str) -> str:
             "unauthorized",
         )
         if any(signal in error_text for signal in quota_signals):
-            return (
-                "Zara is not available right now because the API limit has been reached. "
-                "Please try again later."
-            )
+            return FALLBACK_MESSAGE
 
-        return (
-            "Zara is not available right now. Please try again later. "
-            "If the issue continues, contact support."
-        )
+        return FALLBACK_MESSAGE
 
 
 st.markdown(
@@ -361,6 +394,19 @@ st.markdown(
 
 
 with st.sidebar:
+    st.sidebar.title("ZingTel Support")
+    st.sidebar.markdown(
+        """
+**Zara** can help you with:
+- 📦 Package information
+- 💰 Billing and refunds
+- 🔧 Technical support
+- 📡 Network status
+"""
+    )
+
+    st.sidebar.success("🟢 Zara is online")
+
     st.markdown('<div class="brand-card">', unsafe_allow_html=True)
     st.markdown('<div class="logo-placeholder">📡</div>', unsafe_allow_html=True)
     st.markdown("### ZingTel")
@@ -384,7 +430,6 @@ with st.sidebar:
         <div style="font-size:0.88rem; line-height:1.45; opacity:0.92;">
             <div><strong>Agent:</strong> Zara</div>
             <div><strong>Mode:</strong> RAG + Memory + Web Search</div>
-            <div><strong>Backend:</strong> Groq</div>
             <div><strong>Brand:</strong> ZingTel Support</div>
         </div>
         """,
@@ -394,6 +439,8 @@ with st.sidebar:
     if st.session_state.get('last_error'):
         with st.expander('Last error (debug)'):
             st.code(st.session_state.get('last_error'))
+    st.sidebar.markdown("---")
+    st.sidebar.caption("Built by Ahmad Javed")
     st.markdown("---")
     st.markdown("**Quick prompts**")
     st.markdown('<div class="quick-actions">', unsafe_allow_html=True)
@@ -401,8 +448,11 @@ with st.sidebar:
         if st.button(quick_prompt, use_container_width=True, key=f"quick_{quick_prompt}"):
             st.session_state.messages.append({"role": "user", "content": quick_prompt})
             app_module.config["configurable"]["thread_id"] = st.session_state.thread_id
+            status_slot = st.empty()
+            status_slot.info("Zara is typing...")
             with st.spinner("Zara is thinking..."):
                 response = get_zara_response(quick_prompt)
+            status_slot.empty()
             st.session_state.messages.append({"role": "assistant", "content": response})
             st.rerun()
     st.markdown("</div>", unsafe_allow_html=True)
@@ -460,7 +510,10 @@ if prompt:
     if prompt:
         st.session_state.messages.append({"role": "user", "content": prompt})
         app_module.config["configurable"]["thread_id"] = st.session_state.thread_id
+        status_slot = st.empty()
+        status_slot.info("Zara is typing...")
         with st.spinner("Zara is thinking..."):
             response = get_zara_response(prompt)
+        status_slot.empty()
         st.session_state.messages.append({"role": "assistant", "content": response})
         st.rerun()

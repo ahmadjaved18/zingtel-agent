@@ -1,0 +1,18 @@
+[1mdiff --git a/README.md b/README.md[m
+[1mindex 5187be1..33cb12b 100644[m
+[1m--- a/README.md[m
+[1m+++ b/README.md[m
+[36m@@ -50,8 +50,11 @@[m [mIf you want to use the virtual environment interpreter directly:[m
+ 1. Push this repository to GitHub.[m
+ 2. Connect the GitHub repo to Streamlit Cloud.[m
+ 3. Set the main file path to `streamlit_app.py`.[m
+[31m-4. Add `GEMINI_API_KEY` in the Streamlit Cloud secrets/settings panel.[m
+[31m-5. Deploy and share the generated app URL.[m
+[32m+[m[32m4. Set the Python version to `3.11` or `3.12` in Streamlit Cloud. Do not use `3.14` for this app.[m
+[32m+[m[32m5. Add `GEMINI_API_KEY` in the Streamlit Cloud secrets/settings panel.[m
+[32m+[m[32m6. Deploy and share the generated app URL.[m
+[32m+[m
+[32m+[m[32mIf Streamlit Cloud shows a `chromadb` or `protobuf` import error, the first thing to check is that the app is not running on Python `3.14`.[m
+ [m
+ ## Project Structure[m
+ [m
