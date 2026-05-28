@@ -422,6 +422,20 @@ with st.sidebar:
         placeholder="Paste GEMINI_API_KEY for local runs",
     )
 
+    # Explicit apply button so users can submit the API key reliably
+    if st.sidebar.button("Apply API key", use_container_width=True, key="apply_api"):
+        try:
+            # Force reload using the cache wrapper; then rerun so new module is used
+            load_agent_module.clear()
+        except Exception:
+            pass
+        try:
+            _ = load_agent_module(st.session_state.api_key_override or None)
+            st.sidebar.success("API key applied — reloading agent...")
+        except Exception as e:
+            st.sidebar.error(f"Failed to apply API key: {e}")
+        st.experimental_rerun()
+
     # small spacer so the Clear Conversation button sits lower
     st.sidebar.markdown('<div style="height:0.6rem"></div>', unsafe_allow_html=True)
 
@@ -442,7 +456,24 @@ with st.sidebar:
     if st.session_state.get('last_error'):
         with st.expander('Last error (debug)'):
             st.code(st.session_state.get('last_error'))
-        # Agent info block (also shown in hero header) — placed above author caption
+        
+    st.markdown("---")
+    st.markdown("**Quick prompts**")
+    st.markdown('<div class="quick-actions">', unsafe_allow_html=True)
+    for quick_prompt in QUICK_PROMPTS:
+        if st.button(quick_prompt, use_container_width=True, key=f"quick_{quick_prompt}"):
+            st.session_state.messages.append({"role": "user", "content": quick_prompt})
+            app_module.config["configurable"]["thread_id"] = st.session_state.thread_id
+            status_slot = st.empty()
+            status_slot.info("Zara is typing...")
+            with st.spinner("Zara is thinking..."):
+                response = get_zara_response(quick_prompt)
+            status_slot.empty()
+            st.session_state.messages.append({"role": "assistant", "content": response})
+            st.rerun()
+        st.markdown("</div>", unsafe_allow_html=True)
+
+        # Agent info block (moved here so it's always visible in the sidebar)
         st.sidebar.markdown(
                 """
                 <div style="display:flex; gap:8px; flex-direction:column; margin-bottom:0.6rem;">
@@ -465,21 +496,6 @@ with st.sidebar:
 
         st.sidebar.markdown("---")
         st.sidebar.caption("Built by Ahmad Javed")
-    st.markdown("---")
-    st.markdown("**Quick prompts**")
-    st.markdown('<div class="quick-actions">', unsafe_allow_html=True)
-    for quick_prompt in QUICK_PROMPTS:
-        if st.button(quick_prompt, use_container_width=True, key=f"quick_{quick_prompt}"):
-            st.session_state.messages.append({"role": "user", "content": quick_prompt})
-            app_module.config["configurable"]["thread_id"] = st.session_state.thread_id
-            status_slot = st.empty()
-            status_slot.info("Zara is typing...")
-            with st.spinner("Zara is thinking..."):
-                response = get_zara_response(quick_prompt)
-            status_slot.empty()
-            st.session_state.messages.append({"role": "assistant", "content": response})
-            st.rerun()
-    st.markdown("</div>", unsafe_allow_html=True)
 
 # Reload agent module after sidebar inputs (so Enter on API key applies)
 app_module = load_agent_module(st.session_state.api_key_override or None)
