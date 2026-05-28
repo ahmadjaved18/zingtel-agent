@@ -57,9 +57,10 @@ if "thread_id" not in st.session_state:
 if "api_key_override" not in st.session_state:
     st.session_state.api_key_override = ""
 
-with st.sidebar:
-    st.sidebar.title("ZingTel Support")
-    st.sidebar.markdown(
+sidebar = st.sidebar
+with sidebar:
+    st.title("ZingTel Support")
+    st.markdown(
         """
 **Zara** can help you with:
 - 📦 Package information
@@ -69,8 +70,8 @@ with st.sidebar:
 """
     )
 
-    st.sidebar.success("🟢 Zara is online")
-    st.session_state.api_key_override = st.sidebar.text_input(
+    st.success("🟢 Zara is online")
+    st.session_state.api_key_override = st.text_input(
         "API key (optional for local testing)",
         value=st.session_state.api_key_override,
         type="password",
@@ -410,10 +411,7 @@ with st.sidebar:
     st.markdown('<div class="brand-card">', unsafe_allow_html=True)
     st.markdown('<div class="logo-placeholder">📡</div>', unsafe_allow_html=True)
     st.caption("Zara AI customer support")
-    st.markdown(
-        '<div class="status-pill"><span class="status-dot"></span> Ready</div>',
-        unsafe_allow_html=True,
-    )
+    st.markdown('<div class="status-pill"><span class="status-dot"></span> Ready</div>', unsafe_allow_html=True)
     st.markdown("</div>", unsafe_allow_html=True)
 
     if st.button("Clear Conversation", use_container_width=True):
