@@ -72,4 +72,3 @@ If Streamlit Cloud shows a `chromadb` or `protobuf` import error, the first thin
 - Do not commit `.env`, backup files, or log files. Keep API keys in Streamlit Secrets for public deployments.
 - The app will start without a Gemini key, but chat responses will show a friendly unavailable message until a valid key is configured.
 
-If you want, I can also add more badges (license, PyPI, CI) or a short demo GIF at the top — tell me which you'd prefer.
