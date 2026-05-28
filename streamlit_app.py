@@ -57,27 +57,6 @@ if "thread_id" not in st.session_state:
 if "api_key_override" not in st.session_state:
     st.session_state.api_key_override = ""
 
-sidebar = st.sidebar
-with sidebar:
-    st.title("ZingTel Support")
-    st.markdown(
-        """
-**Zara** can help you with:
-- 📦 Package information
-- 💰 Billing and refunds
-- 🔧 Technical support
-- 📡 Network status
-"""
-    )
-
-    st.success("🟢 Zara is online")
-    st.session_state.api_key_override = st.text_input(
-        "API key (optional for local testing)",
-        value=st.session_state.api_key_override,
-        type="password",
-        help="Use this only for local testing. For Streamlit Cloud, keep the key in Secrets.",
-    )
-
 app_module = load_agent_module(st.session_state.api_key_override or None)
 
 
@@ -444,11 +423,6 @@ with st.sidebar:
     st.markdown("---")
     st.markdown(
         """
-        <div style="font-size:0.88rem; line-height:1.45; opacity:0.92;">
-            <div><strong>Agent:</strong> Zara</div>
-            <div><strong>Mode:</strong> RAG + Memory + Web Search</div>
-            <div><strong>Brand:</strong> ZingTel Support</div>
-        </div>
         """,
         unsafe_allow_html=True,
     )
@@ -476,8 +450,19 @@ with st.sidebar:
 
 
 st.markdown(
-    '<div class="hero-panel"><div class="hero-kicker">Telecom support assistant</div><h1 class="hero-title">ZingTel Support — Zara AI Agent</h1><p class="hero-subtitle">Ask about activation, billing, packages, complaints, or technical help. The conversation stays in this session and the transcript is designed to stay clean, readable, and scrollable.</p></div>',
-    unsafe_allow_html=True,
+        '''
+        <div class="hero-panel">
+            <div class="hero-kicker">Telecom support assistant</div>
+            <h1 class="hero-title">ZingTel Support — Zara AI Agent</h1>
+            <p class="hero-subtitle">Ask about activation, billing, packages, complaints, or technical help. The conversation stays in this session and the transcript is designed to stay clean, readable, and scrollable.</p>
+            <div style="display:flex; gap:12px; margin-top:14px;">
+                <div style="padding:8px 12px; border-radius:12px; background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.04);"> <strong style="display:block; font-size:0.78rem; opacity:0.8">Agent</strong> <span style="font-weight:600">Zara</span></div>
+                <div style="padding:8px 12px; border-radius:12px; background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.04);"> <strong style="display:block; font-size:0.78rem; opacity:0.8">Mode</strong> <span style="font-weight:600">RAG + Memory + Web Search</span></div>
+                <div style="padding:8px 12px; border-radius:12px; background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.04);"> <strong style="display:block; font-size:0.78rem; opacity:0.8">Brand</strong> <span style="font-weight:600">ZingTel Support</span></div>
+            </div>
+        </div>
+        ''',
+        unsafe_allow_html=True,
 )
 
 
