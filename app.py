@@ -33,30 +33,47 @@ else:
             temperature=0
         )
 
-# ── RAG setup ─────────────────
-loader = TextLoader("ZingTel_guide.txt")
-documents = loader.load()
-splitter = RecursiveCharacterTextSplitter(chunk_size=400, chunk_overlap=100)
-chunks = splitter.split_documents(documents)
+# ── RAG setup (resilient) ─────────────────
+RAG_AVAILABLE = True
+try:
+    loader = TextLoader("ZingTel_guide.txt")
+    documents = loader.load()
+    splitter = RecursiveCharacterTextSplitter(chunk_size=400, chunk_overlap=100)
+    chunks = splitter.split_documents(documents)
 
-embedding_model = SentenceTransformer('all-MiniLM-L6-v2')
-chroma_client = chromadb.Client()
-collection = chroma_client.get_or_create_collection('zingtel_agent')
+    embedding_model = SentenceTransformer('all-MiniLM-L6-v2')
+    try:
+        chroma_client = chromadb.Client()
+        collection = chroma_client.get_or_create_collection('zingtel_agent')
 
-texts = [chunk.page_content for chunk in chunks]
-embeddings = embedding_model.encode(texts).tolist()
-collection.add(
-    documents=texts,
-    embeddings=embeddings,
-    ids=[f"chunk_{i}" for i in range(len(texts))]
-)
-print(f"RAG ready — {len(texts)} chunks loaded")
+        texts = [chunk.page_content for chunk in chunks]
+        embeddings = embedding_model.encode(texts).tolist()
+        collection.add(
+            documents=texts,
+            embeddings=embeddings,
+            ids=[f"chunk_{i}" for i in range(len(texts))]
+        )
+        print(f"RAG ready — {len(texts)} chunks loaded")
+    except Exception as e:
+        print(f"Chromadb or embeddings initialization failed: {e}")
+        collection = None
+        chroma_client = None
+        RAG_AVAILABLE = False
+except Exception as e:
+    print(f"RAG disabled: {e}")
+    RAG_AVAILABLE = False
+    collection = None
+    chroma_client = None
+    embedding_model = None
+    chunks = []
 
 # ── tools ─────────────────
 @tool
 def search_zingtel_docs(question: str) -> str:
     """Search ZingTel's official documents for policies, procedures, 
     and service information. Use this for any ZingTel-specific questions."""
+    if not RAG_AVAILABLE or collection is None or embedding_model is None:
+        return "Document search is currently unavailable."
     question_embedding = embedding_model.encode([question]).tolist()
     results = collection.query(
         query_embeddings=question_embedding,
@@ -117,8 +134,7 @@ def convert_to_usd(pkr_amount: str) -> str:
         return f"Rs. {pkr:.0f} = ${usd:.2f} USD"
     except:
         return "Invalid amount"
-
-# ── Create agent with memory ───────────────────────────────
+    
 tools = [search_zingtel_docs, search_web, get_package_details,
          calculate_total_cost, convert_to_usd]
 
