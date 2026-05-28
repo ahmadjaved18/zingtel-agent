@@ -422,6 +422,9 @@ with st.sidebar:
         placeholder="Paste GEMINI_API_KEY for local runs",
     )
 
+    # small spacer so the Clear Conversation button sits lower
+    st.sidebar.markdown('<div style="height:0.6rem"></div>', unsafe_allow_html=True)
+
     if st.button("Clear Conversation", use_container_width=True):
         st.session_state.messages = []
         st.session_state.thread_id = f"streamlit_{uuid.uuid4().hex}"
@@ -478,6 +481,9 @@ with st.sidebar:
             st.rerun()
     st.markdown("</div>", unsafe_allow_html=True)
 
+# Reload agent module after sidebar inputs (so Enter on API key applies)
+app_module = load_agent_module(st.session_state.api_key_override or None)
+
 
 st.markdown(
         '''
@@ -485,11 +491,6 @@ st.markdown(
             <div class="hero-kicker">Telecom support assistant</div>
             <h1 class="hero-title">ZingTel Support — Zara AI Agent</h1>
             <p class="hero-subtitle">Ask about activation, billing, packages, complaints, or technical help. The conversation stays in this session and the transcript is designed to stay clean, readable, and scrollable.</p>
-            <div style="display:flex; gap:12px; margin-top:14px;">
-                <div style="padding:8px 12px; border-radius:12px; background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.04);"> <strong style="display:block; font-size:0.78rem; opacity:0.8">Agent</strong> <span style="font-weight:600">Zara</span></div>
-                <div style="padding:8px 12px; border-radius:12px; background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.04);"> <strong style="display:block; font-size:0.78rem; opacity:0.8">Mode</strong> <span style="font-weight:600">RAG + Memory + Web Search</span></div>
-                <div style="padding:8px 12px; border-radius:12px; background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.04);"> <strong style="display:block; font-size:0.78rem; opacity:0.8">Brand</strong> <span style="font-weight:600">ZingTel Support</span></div>
-            </div>
         </div>
         ''',
         unsafe_allow_html=True,
