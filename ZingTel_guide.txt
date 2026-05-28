@@ -1,0 +1,48 @@
+ZingTel Complete Service Guide 2024
+
+Chapter 1: Getting Started
+To activate your ZingTel SIM, visit any franchise with your original CNIC.
+New customers get 1GB free data for the first 3 days.
+SIM activation takes up to 2 hours after registration.
+
+Chapter 2: Billing and Payments
+Bills are generated on the 1st of every month.
+Payment can be made via EasyPaisa, JazzCash, or bank transfer.
+Late payment charges of Rs. 50 apply after 15 days.
+Account suspension occurs after 30 days of non-payment.
+
+Chapter 3: Technical Support
+Technical support is available 24/7 on 111.
+Live chat support is available on ZingTel app from 9am to 9pm.
+Home visits for technical issues are free for Premium customers.
+Standard and Basic customers are charged Rs. 200 for home visits.
+
+Chapter 4: Complaints and Escalation
+Complaints are resolved within 3 working days.
+Unresolved complaints can be escalated to PTA at pta.gov.pk.
+Compensation for service failure is credited within 5 working days.
+sample_text = """
+ZingTel Complete Service Guide 2024
+
+Chapter 1: Getting Started
+To activate your ZingTel SIM, visit any franchise with your original CNIC.
+New customers get 1GB free data for the first 3 days.
+SIM activation takes up to 2 hours after registration.
+
+Chapter 2: Billing and Payments
+Bills are generated on the 1st of every month.
+Payment can be made via EasyPaisa, JazzCash, or bank transfer.
+Late payment charges of Rs. 50 apply after 15 days.
+Account suspension occurs after 30 days of non-payment.
+
+Chapter 3: Technical Support
+Technical support is available 24/7 on 111.
+Live chat support is available on ZingTel app from 9am to 9pm.
+Home visits for technical issues are free for Premium customers.
+Standard and Basic customers are charged Rs. 200 for home visits.
+
+Chapter 4: Complaints and Escalation
+Complaints are resolved within 3 working days.
+Unresolved complaints can be escalated to PTA at pta.gov.pk.
+Compensation for service failure is credited within 5 working days.
+"""
