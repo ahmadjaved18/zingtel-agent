@@ -471,31 +471,31 @@ with st.sidebar:
             status_slot.empty()
             st.session_state.messages.append({"role": "assistant", "content": response})
             st.rerun()
-        st.markdown("</div>", unsafe_allow_html=True)
+    st.markdown("</div>", unsafe_allow_html=True)
 
-        # Agent info block (moved here so it's always visible in the sidebar)
-        st.sidebar.markdown(
-                """
-                <div style="display:flex; gap:8px; flex-direction:column; margin-bottom:0.6rem;">
-                    <div style="padding:10px; border-radius:10px; background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.03);">
-                        <div style="font-size:0.78rem; opacity:0.8;">Agent</div>
-                        <div style="font-weight:600;">Zara</div>
-                    </div>
-                    <div style="padding:10px; border-radius:10px; background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.03);">
-                        <div style="font-size:0.78rem; opacity:0.8;">Mode</div>
-                        <div style="font-weight:600;">RAG + Memory + Web Search</div>
-                    </div>
-                    <div style="padding:10px; border-radius:10px; background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.03);">
-                        <div style="font-size:0.78rem; opacity:0.8;">Brand</div>
-                        <div style="font-weight:600;">ZingTel Support</div>
-                    </div>
-                </div>
-                """,
-                unsafe_allow_html=True,
-        )
+    # Agent info block (render once, after quick prompts)
+    st.sidebar.markdown(
+        """
+        <div style="display:flex; gap:8px; flex-direction:column; margin-bottom:0.6rem;">
+            <div style="padding:10px; border-radius:10px; background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.03);">
+                <div style="font-size:0.78rem; opacity:0.8;">Agent</div>
+                <div style="font-weight:600;">Zara</div>
+            </div>
+            <div style="padding:10px; border-radius:10px; background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.03);">
+                <div style="font-size:0.78rem; opacity:0.8;">Mode</div>
+                <div style="font-weight:600;">RAG + Memory + Web Search</div>
+            </div>
+            <div style="padding:10px; border-radius:10px; background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.03);">
+                <div style="font-size:0.78rem; opacity:0.8;">Brand</div>
+                <div style="font-weight:600;">ZingTel Support</div>
+            </div>
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
 
-        st.sidebar.markdown("---")
-        st.sidebar.caption("Built by Ahmad Javed")
+    st.sidebar.markdown("---")
+    st.sidebar.caption("Built by Ahmad Javed")
 
 # Reload agent module after sidebar inputs (so Enter on API key applies)
 app_module = load_agent_module(st.session_state.api_key_override or None)
