@@ -139,7 +139,7 @@ st.markdown(
         }
 
         .block-container {
-            padding-top: 1.5rem;
+            padding-top: 2.25rem;
             padding-bottom: 1.1rem;
         }
 
@@ -413,6 +413,15 @@ with st.sidebar:
     st.markdown('<div class="status-pill"><span class="status-dot"></span> Ready</div>', unsafe_allow_html=True)
     st.markdown("</div>", unsafe_allow_html=True)
 
+    # API key override (visible for local testing)
+    st.session_state.api_key_override = st.sidebar.text_input(
+        "API key (optional for local testing)",
+        value=st.session_state.api_key_override,
+        type="password",
+        help="Use this only for local testing. For Streamlit Cloud, keep the key in Secrets.",
+        placeholder="Paste GEMINI_API_KEY for local runs",
+    )
+
     if st.button("Clear Conversation", use_container_width=True):
         st.session_state.messages = []
         st.session_state.thread_id = f"streamlit_{uuid.uuid4().hex}"
@@ -430,8 +439,29 @@ with st.sidebar:
     if st.session_state.get('last_error'):
         with st.expander('Last error (debug)'):
             st.code(st.session_state.get('last_error'))
-    st.sidebar.markdown("---")
-    st.sidebar.caption("Built by Ahmad Javed")
+        # Agent info block (also shown in hero header) — placed above author caption
+        st.sidebar.markdown(
+                """
+                <div style="display:flex; gap:8px; flex-direction:column; margin-bottom:0.6rem;">
+                    <div style="padding:10px; border-radius:10px; background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.03);">
+                        <div style="font-size:0.78rem; opacity:0.8;">Agent</div>
+                        <div style="font-weight:600;">Zara</div>
+                    </div>
+                    <div style="padding:10px; border-radius:10px; background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.03);">
+                        <div style="font-size:0.78rem; opacity:0.8;">Mode</div>
+                        <div style="font-weight:600;">RAG + Memory + Web Search</div>
+                    </div>
+                    <div style="padding:10px; border-radius:10px; background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.03);">
+                        <div style="font-size:0.78rem; opacity:0.8;">Brand</div>
+                        <div style="font-weight:600;">ZingTel Support</div>
+                    </div>
+                </div>
+                """,
+                unsafe_allow_html=True,
+        )
+
+        st.sidebar.markdown("---")
+        st.sidebar.caption("Built by Ahmad Javed")
     st.markdown("---")
     st.markdown("**Quick prompts**")
     st.markdown('<div class="quick-actions">', unsafe_allow_html=True)
