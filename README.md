@@ -50,8 +50,11 @@ If you want to use the virtual environment interpreter directly:
 1. Push this repository to GitHub.
 2. Connect the GitHub repo to Streamlit Cloud.
 3. Set the main file path to `streamlit_app.py`.
-4. Add `GEMINI_API_KEY` in the Streamlit Cloud secrets/settings panel.
-5. Deploy and share the generated app URL.
+4. Set the Python version to `3.11` or `3.12` in Streamlit Cloud. Do not use `3.14` for this app.
+5. Add `GEMINI_API_KEY` in the Streamlit Cloud secrets/settings panel.
+6. Deploy and share the generated app URL.
+
+If Streamlit Cloud shows a `chromadb` or `protobuf` import error, the first thing to check is that the app is not running on Python `3.14`.
 
 ## Project Structure
 
