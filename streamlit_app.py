@@ -434,7 +434,11 @@ with st.sidebar:
             st.sidebar.success("API key applied — reloading agent...")
         except Exception as e:
             st.sidebar.error(f"Failed to apply API key: {e}")
-        st.experimental_rerun()
+        try:
+            st.rerun()
+        except Exception:
+            # Fallback: stop execution and ask user to refresh if rerun fails
+            st.stop()
 
     # small spacer so the Clear Conversation button sits lower
     st.sidebar.markdown('<div style="height:0.6rem"></div>', unsafe_allow_html=True)
